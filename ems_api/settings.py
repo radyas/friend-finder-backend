@@ -130,3 +130,6 @@ AUTH_USER_MODEL = 'users.User'
 # file upload parameters
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Test runner which will run the tests
+TEST_RUNNER = 'ems_api.pytest_runner.PytestTestRunner'
