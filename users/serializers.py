@@ -54,7 +54,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = [
-            'id', 'first_name', 'last_name', 'email', 'password', 'company', 'phone', 'role'
+            'id', 'first_name', 'last_name', 'email', 'password', 'role'
         ]
 
     def create(self, validated_data):
@@ -96,7 +96,7 @@ class PasswordChangeSerializer(serializers.ModelSerializer):
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ['first_name', 'last_name', 'phone']
+        fields = ['first_name', 'last_name', 'profile_picture']
 
 
 class UserResetPasswordSerializer(serializers.ModelSerializer):
