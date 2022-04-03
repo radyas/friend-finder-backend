@@ -1,4 +1,4 @@
-"""ems_api URL Configuration
+"""friend_finder URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
@@ -14,8 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
+from files.views import FileViewSet
+from users.views import AuthViewSet, UserViewSet
+
+router = DefaultRouter()
+router.register('auth', AuthViewSet, basename='auth')
+router.register('users', UserViewSet, basename='users')
+router.register('files', FileViewSet, basename='files')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(router.urls))
 ]
