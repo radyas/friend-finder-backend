@@ -1,5 +1,5 @@
 """
-ASGI config for ems_api project.
+ASGI config for friend_finder project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ems_api.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'friend_finder.settings')
 
 application = get_asgi_application()
