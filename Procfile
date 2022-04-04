@@ -1,1 +1,1 @@
-web: gunicorn friend_finder.wsgi:application --bind 0.0.0.0:8000s
+web: gunicorn friend_finder.wsgi:application --bind 0.0.0.0:8000
