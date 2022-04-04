@@ -1,1 +1,0 @@
-web: gunicorn friend_finder.wsgi
