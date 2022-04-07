@@ -4,14 +4,15 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet, ModelViewSet
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
 from users.models import User, Roles
 from users.serializers import UserSerializer, ProfileUpdateSerializer, UserResetPasswordSerializer, \
-    AuthRegisterSerializer
+    AuthRegisterSerializer, LoginSerializer
 
 
 class AuthViewSet(ViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     @action(methods=['post'], detail=False)
     def register(self, request):
@@ -28,6 +29,17 @@ class AuthViewSet(ViewSet):
             user.set_password(serializer.validated_data.get('new_password'))
             user.save()
             return Response()
+
+    @action(methods=['post'], detail=False)
+    def token(self, request):
+        serializer = LoginSerializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
 class UserViewSet(ModelViewSet):

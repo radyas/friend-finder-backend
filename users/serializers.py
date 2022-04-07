@@ -6,6 +6,7 @@ from django.http import Http404
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from users.error_codes import AccountErrorCodes
 
@@ -124,3 +125,20 @@ class UserResetPasswordSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ['new_password', 'confirm_new_password', 'token', 'email']
+
+
+class LoginSerializer(TokenObtainPairSerializer):
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        user = self.user
+
+        return {
+            'name': user.get_full_name(),
+            'email': user.email,
+            'id': str(user.pk),
+            'joined_date': str(user.created_date.timestamp()),
+            'completed_profile': 'false',
+            'token': data['access']
+        }
+
