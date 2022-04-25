@@ -142,3 +142,17 @@ class LoginSerializer(TokenObtainPairSerializer):
             'token': data['access']
         }
 
+
+class UserMatchingSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    email = serializers.EmailField()
+    joined_date = serializers.CharField()
+    birthday = serializers.CharField()
+    zodiac_sign = serializers.CharField()
+    birthplace_lat = serializers.DecimalField(decimal_places=4, max_digits=3)
+    birthplace_long = serializers.DecimalField(decimal_places=4, max_digits=3)
+    favourite_food = serializers.CharField()
+    favourite_drink = serializers.CharField()
+    favourite_fruit = serializers.CharField()
+    gender = serializers.CharField()
+    city = serializers.CharField()

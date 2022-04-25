@@ -8,7 +8,7 @@ from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
 from users.models import User, Roles
 from users.serializers import UserSerializer, ProfileUpdateSerializer, UserResetPasswordSerializer, \
-    AuthRegisterSerializer, LoginSerializer
+    AuthRegisterSerializer, LoginSerializer, UserMatchingSerializer
 
 
 class AuthViewSet(ViewSet):
@@ -44,10 +44,17 @@ class AuthViewSet(ViewSet):
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'me' and self.request.method in ['put', 'patch']:
+            return ProfileUpdateSerializer
+        elif self.action == 'matched':
+            return UserMatchingSerializer
+        else:
+            return UserSerializer
 
     def get_permissions(self):
-        if self.action == 'me':
+        if self.action in ['me', 'matched']:
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAuthenticated, IsAdminUser]
@@ -64,11 +71,17 @@ class UserViewSet(ModelViewSet):
     @action(detail=False, methods=['get', 'put', 'patch'])
     def me(self, request):
         if request.method == 'get':
-            serializer = UserSerializer(request.user)
+            serializer = self.get_serializer()
             return Response(serializer.data)
         else:
-            serializer = ProfileUpdateSerializer(data=request.data, instance=request.user, partial=True)
+            serializer = self.get_serializer(data=request.data, instance=request.user, partial=True)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
             return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def matched(self, request):
+        data = []
+        serializer = self.get_serializer(data, many=True)
+        return Response(serializer.data)
 
